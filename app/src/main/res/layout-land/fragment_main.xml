@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imageGifView"
+        app:layout_constraintTop_toBottomOf="@+id/imageGifView">
+
+        <!-- TODO: Update blank fragment layout -->
+
+
+        <ImageView
+            android:id="@+id/imageGifView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:elevation="10dp"
+            android:outlineProvider="bounds"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <ImageButton
+            android:id="@+id/spellLetterImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="21dp"
+            android:elevation="10dp"
+            android:src="@android:drawable/ic_media_play"
+            app:layout_constraintBottom_toBottomOf="@+id/spellSampleImageView"
+            app:layout_constraintEnd_toStartOf="@+id/imageGifView"
+            app:layout_constraintTop_toTopOf="@+id/spellSampleImageView" />
+
+        <ImageButton
+            android:id="@+id/spellSampleImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:layout_marginBottom="34dp"
+            android:elevation="10dp"
+            android:src="@android:drawable/ic_media_play"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintStart_toEndOf="@+id/imageGifView"
+            app:layout_constraintTop_toBottomOf="@+id/imageGifView" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="407dp"
+            android:layout_height="49dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/previousButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:text="Poprzednia" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:text="Następna" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/articulationTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:text="wymowa: "
+            app:layout_constraintBottom_toBottomOf="@+id/spellLetterImageView"
+            app:layout_constraintEnd_toStartOf="@+id/spellLetterImageView" />
+
+        <TextView
+            android:id="@+id/sampleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:text="przyklady: "
+            app:layout_constraintBottom_toBottomOf="@+id/spellSampleImageView"
+            app:layout_constraintEnd_toStartOf="@+id/spellSampleImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
