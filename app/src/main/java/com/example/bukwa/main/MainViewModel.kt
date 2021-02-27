@@ -3,26 +3,26 @@ package com.example.bukwa.main
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(val mainRepository: MainRepository) : ViewModel() {
+class MainViewModel @Inject constructor(val letterRepository: LetterRepository) : ViewModel() {
 
-    val buttonSingleStatus = mainRepository.mediaPlayerUtil.buttonSingleStatus
-    val letter = mainRepository.letter
+    val buttonSingleStatus = letterRepository.mediaPlayerUtil.buttonSingleStatus
+    val letter = letterRepository.currentLetter
 
 
     fun playLetterSampleSoundExample() {
-        mainRepository.playLetterSampleSoundExample()
+        letterRepository.playLetterSampleSoundExample()
     }
 
     fun nextLetter() {
-        mainRepository.nextLetter()
+        letterRepository.nextLetter()
     }
 
     fun previousLetter() {
-        mainRepository.previousLetter()
+        letterRepository.previousLetter()
     }
 
     fun playLetterSingleSoundExample() {
-        mainRepository.playLetterSingleSoundExample()
+        letterRepository.playLetterSingleSoundExample()
     }
 
 }

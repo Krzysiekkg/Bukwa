@@ -8,26 +8,33 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Dao
+import com.example.bukwa.data.room.Letters
+import com.example.bukwa.data.room.LettersDao
 import com.example.bukwa.databinding.FragmentMainBinding
 import com.example.bukwa.di.CustomApp
 import com.example.bukwa.main.buttonStatus.Status
-import com.example.bukwa.util.RussianAlphabetForUrl
 import com.example.bukwa.util.RussianAlphabetForUrl.Companion.BASE_URL
 import com.example.bukwa.util.setImageFromUrl
 import com.example.bukwa.viewmodelutils.ViewModelFactory
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.suspendCoroutine
 
 
 class MainFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var mainViewModel: MainViewModel
+    @Inject
+    lateinit var letterDao: LettersDao
 
+    lateinit var mainViewModel: MainViewModel
     lateinit var imageOfButton: ImageButton
 
-    var bukwa: String = "a"
 
-
+    //viewbinding stuff
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
@@ -53,20 +60,45 @@ class MainFragment : Fragment() {
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
-        binding.imageGifView.setOnClickListener(OnImageClick())
-        binding.spellSampleImageView.setOnClickListener(SpellSampleClick())
-        binding.spellLetterImageView.setOnClickListener(SpellLetterClick())
-        binding.nextButton.setOnClickListener(OnNextButtonClick())
-        binding.previousButton.setOnClickListener(OnPreviousButtonClick())
+        letterDao.getAllLetters()
+
+       /* GlobalScope.launch {
+            letterDao.insert(Letters(polish = "a", russian = "a"))
+
+        }*/
+        binding.imageGifView.setOnClickListener {
+            setImageFromUrl(
+                binding.imageGifView,
+                "$BASE_URL/${mainViewModel.letter}-on.gif"
+            )
+        }
+
+        binding.spellSampleImageView.setOnClickListener {
+            imageOfButton = binding.spellSampleImageView
+            mainViewModel.playLetterSampleSoundExample()
+        }
+
+        binding.spellLetterImageView.setOnClickListener {
+            imageOfButton = binding.spellLetterImageView
+            mainViewModel.playLetterSingleSoundExample()
+        }
+
+        binding.nextButton.setOnClickListener {
+            mainViewModel.nextLetter()
+        }
+
+        binding.previousButton.setOnClickListener {
+            mainViewModel.previousLetter()
+        }
+
         //kotlin top level function, i don't like it becouse of readability
         imageOfButton = binding.spellSampleImageView
 
-        mainViewModel.letter.observe(viewLifecycleOwner, Observer<Int> { index ->
-            bukwa = RussianAlphabetForUrl.listOfLetters.get(index)
+        mainViewModel.letter.observe(viewLifecycleOwner, Observer<String> { currentLetter ->
+
             setImageFromUrl(
                 binding.imageGifView,
-                "$BASE_URL/$bukwa-off.gif"
-
+                "$BASE_URL/$currentLetter-off.gif"
             )
         })
 
@@ -80,48 +112,13 @@ class MainFragment : Fragment() {
                 Status.PAUSE -> imageOfButton.setImageResource(android.R.drawable.ic_media_pause)
             }
         })
-
         return binding.root
     }
-
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
 
-    inner class OnImageClick : View.OnClickListener {
-        override fun onClick(v: View?) {
-            setImageFromUrl(
-                binding.imageGifView,
-                "$BASE_URL/$bukwa-on.gif"
-            )
-        }
-    }
 
-    inner class SpellSampleClick : View.OnClickListener {
-        override fun onClick(v: View?) {
-            imageOfButton = binding.spellSampleImageView
-            mainViewModel.playLetterSampleSoundExample()
-        }
-    }
-
-    inner class SpellLetterClick : View.OnClickListener {
-        override fun onClick(v: View?) {
-            imageOfButton = binding.spellLetterImageView
-            mainViewModel.playLetterSingleSoundExample()
-        }
-    }
-
-    inner class OnNextButtonClick : View.OnClickListener {
-        override fun onClick(v: View?) {
-            mainViewModel.nextLetter()
-        }
-    }
-
-    inner class OnPreviousButtonClick : View.OnClickListener {
-        override fun onClick(v: View?) {
-            mainViewModel.previousLetter()
-        }
-    }
 }
