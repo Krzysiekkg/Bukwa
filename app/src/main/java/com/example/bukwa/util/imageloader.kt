@@ -1,7 +1,6 @@
 package com.example.bukwa.util
 
 import android.widget.ImageView
-import androidx.annotation.Nullable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -13,6 +12,7 @@ import com.bumptech.glide.request.target.Target
 
 fun setImageFromUrl(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
+
         Glide.with(view.context)
             .asGif()
             .load(imageUrl)
@@ -38,7 +38,7 @@ fun setImageFromUrl(view: ImageView, imageUrl: String?) {
                 }
             })
             .transition(DrawableTransitionOptions.withCrossFade())
-            .override(500,500)
+            .override(500, 500)
             .into(view)
     }
 }

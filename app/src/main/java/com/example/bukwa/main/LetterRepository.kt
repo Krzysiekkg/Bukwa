@@ -1,60 +1,65 @@
 package com.example.bukwa.main
 
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.bukwa.data.room.LettersDao
 import com.example.bukwa.util.MediaPlayerUtil
-import com.example.bukwa.util.RussianAlphabetForUrl
+import com.example.bukwa.util.RussianAlphabetForUrl.Companion.BASE_URL
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class LetterRepository @Inject constructor(
-    val mediaPlayerUtil: MediaPlayerUtil
+    val mediaPlayerUtil: MediaPlayerUtil,
+    val lettersDao: LettersDao
 ) {
 
-    private var letterIndex = MutableLiveData<Int>()
-    var currentLetter = MediatorLiveData<String>()
+    private var letterIndex: Int
+    private lateinit var lettersForUrl: List<String>
+    var currentLetter = MutableLiveData<String>()
+
 
     init {
-        letterIndex.value = 0
-        currentLetter.apply {
-            letterIndex.value?.let {
-                addSource(letterIndex) {
-                    value = RussianAlphabetForUrl.listOfLetters.get(it)
-                }
-            }
+
+        letterIndex = 0
+        CoroutineScope(IO).launch {
+            lettersForUrl = lettersDao.getLettersForUrl()
+            currentLetter.postValue(lettersForUrl.get(letterIndex))
+
         }
-    }
-
-
-    fun playLetterSampleSoundExample() {
-
-        val url = "${RussianAlphabetForUrl.BASE_URL}/${currentLetter}-samples.mp3"
-        mediaPlayerUtil.playSound(url)
     }
 
     fun nextLetter() {
-        letterIndex.value.let {
-            if (it == (RussianAlphabetForUrl.listOfLetters.lastIndex)) {
-                letterIndex.value = 0
-                return
-            }
-            letterIndex.value = it?.plus(1)
+
+        when (letterIndex.equals(lettersForUrl.lastIndex)) {
+            true -> letterIndex = 0
+            false -> letterIndex++
         }
+        currentLetter.postValue(lettersForUrl.get(letterIndex))
+
     }
 
     fun previousLetter() {
-        letterIndex.value.let { letterList ->
-            if (letterList!!.equals(0)) {
-                letterIndex.value = RussianAlphabetForUrl.listOfLetters.lastIndex
-                return
-            }
-            letterIndex.value = letterList!!.minus(1)
+
+        when (letterIndex.equals(0)) {
+            true -> letterIndex = lettersForUrl.lastIndex
+            false -> letterIndex--
         }
+        currentLetter.postValue(lettersForUrl.get(letterIndex))
+
+    }
+
+    fun playLetterSampleSoundExample() {
+        val url = "${BASE_URL}/${lettersForUrl.get(letterIndex)}-samples.mp3"
+        mediaPlayerUtil.playSound(url)
+
+
     }
 
     fun playLetterSingleSoundExample() {
 
-        val url = "${RussianAlphabetForUrl.BASE_URL}/${currentLetter.value}.mp3"
+        val url = "${BASE_URL}/${lettersForUrl.get(letterIndex)}.mp3"
 
         mediaPlayerUtil.playSound(url)
     }

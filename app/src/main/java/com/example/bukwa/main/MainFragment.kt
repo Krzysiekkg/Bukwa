@@ -8,8 +8,6 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Dao
-import com.example.bukwa.data.room.Letters
 import com.example.bukwa.data.room.LettersDao
 import com.example.bukwa.databinding.FragmentMainBinding
 import com.example.bukwa.di.CustomApp
@@ -17,16 +15,13 @@ import com.example.bukwa.main.buttonStatus.Status
 import com.example.bukwa.util.RussianAlphabetForUrl.Companion.BASE_URL
 import com.example.bukwa.util.setImageFromUrl
 import com.example.bukwa.viewmodelutils.ViewModelFactory
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.suspendCoroutine
 
 
 class MainFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
     @Inject
     lateinit var letterDao: LettersDao
 
@@ -59,13 +54,9 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        //this was added only to use database inspector
 
-        letterDao.getAllLetters()
 
-       /* GlobalScope.launch {
-            letterDao.insert(Letters(polish = "a", russian = "a"))
-
-        }*/
         binding.imageGifView.setOnClickListener {
             setImageFromUrl(
                 binding.imageGifView,

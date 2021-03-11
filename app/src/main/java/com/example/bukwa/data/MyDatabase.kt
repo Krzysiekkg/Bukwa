@@ -6,8 +6,8 @@ import com.example.bukwa.data.room.Letters
 import com.example.bukwa.data.room.LettersDao
 import javax.inject.Singleton
 
-@Singleton
-@Database(entities = arrayOf(Letters::class), version = 1, exportSchema = false)
+
+@Database(entities = arrayOf(Letters::class), version = 1, exportSchema = true)
 abstract class MyDatabase: RoomDatabase() {
     abstract fun lettersDao(): LettersDao
 }
